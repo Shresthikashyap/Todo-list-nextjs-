@@ -28,8 +28,8 @@ export default async function handler(req, res) {
       
       const { taskId } = req.query;
       const result = await tasksCollection.updateOne(
-        { _id: new ObjectId(taskId) }, // Filter to find the task to update
-        { $set: { complete: true } } // Update operation to mark task as complete
+        { _id: new ObjectId(taskId) }, 
+        { $set: { complete: true } } 
       );
   
       if (result.modifiedCount === 0) {
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true });
     }
   } catch (error) {
-    //console.error('Error:', error);
+    console.error('Error:', error);
     return res.status(500).json({ success: false, error: 'Server error' });
   } finally {
     await client.close();
