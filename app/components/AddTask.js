@@ -33,8 +33,8 @@ const AddTask = () => {
 
   const removeTask = async (taskId) => {
     try {
-      console.error('ggggg',taskId);
-      await axios.delete(`/api/tasks/${taskId}`);
+    
+      await axios.delete(`/api/tasks?taskId=${taskId}`);
       fetchTasks();
     } catch (error) {
       console.error('Error removing task:', error);
