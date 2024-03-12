@@ -20,8 +20,23 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'GET') {
-      const tasks = await tasksCollection.find().toArray();
+      const tasks = await tasksCollection.find({ complete: false }).toArray();
       return res.status(200).json({ success: true, data: tasks });
+    }
+
+    if (req.method === 'PUT') {
+      
+      const { taskId } = req.query;
+      const result = await tasksCollection.updateOne(
+        { _id: new ObjectId(taskId) }, // Filter to find the task to update
+        { $set: { complete: true } } // Update operation to mark task as complete
+      );
+  
+      if (result.modifiedCount === 0) {
+        return res.status(404).json({ success: false, error: 'Task not found' });
+      }
+  
+      return res.status(200).json({ success: true });
     }
 
     if (req.method === 'DELETE') {
