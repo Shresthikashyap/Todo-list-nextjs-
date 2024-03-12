@@ -1,0 +1,20 @@
+/* AddTask.module.css */
+.container {
+    margin-top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+ 
+  .taskList {
+    list-style: none;
+    padding: 0;
+    padding-top: 5%;
+  }
+  
+  .taskItem {
+    margin-bottom: 8px;
+  }
+  
+ 
+  
