@@ -1,21 +1,44 @@
-import React, { useState } from 'react';
-import styles from './AddTask.module.css';
+import React, { useState, useEffect } from 'react';
+import styles from './AddTask.module.css'
+import axios from 'axios';
 
 const AddTask = () => {
   const [tasks, setTasks] = useState([]);
   const [inputValue, setInputValue] = useState('');
 
-  const addTask = () => {
-    if (inputValue.trim() !== '') {
-      setTasks([...tasks, inputValue]);
-      setInputValue('');
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const response = await axios.get('/api/tasks');
+      setTasks(response.data.data);
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
     }
   };
 
-  const removeTask = (index) => {
-    const newTasks = [...tasks];
-    newTasks.splice(index, 1);
-    setTasks(newTasks);
+  const addTask = async () => {
+    if (inputValue.trim() !== '') {
+      try {
+        await axios.post('/api/tasks', { name: inputValue });
+        setInputValue('');
+        fetchTasks();
+      } catch (error) {
+        console.error('Error adding task:', error);
+      }
+    }
+  };
+
+  const removeTask = async (taskId) => {
+    try {
+      console.error('ggggg',taskId);
+      await axios.delete(`/api/tasks/${taskId}`);
+      fetchTasks();
+    } catch (error) {
+      console.error('Error removing task:', error);
+    }
   };
 
   return (
@@ -25,16 +48,16 @@ const AddTask = () => {
         <input
           type="text"
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
           className={styles.input}
+          onChange={(e) => setInputValue(e.target.value)}
         />
         <button onClick={addTask} className={styles.addButton}>Add Task</button>
       </div>
       <ul className={styles.taskList}>
-        {tasks.map((task, index) => (
-          <li key={index} className={styles.taskItem}>
-            {task}
-            <button onClick={() => removeTask(index)} className={styles.removeButton}>Remove</button>
+        {tasks.map((task) => (
+          <li key={task._id} className={styles.taskItem}>
+            {task.name}
+            <button onClick={() => removeTask(task._id)} className={styles.removeButton}>Remove</button>
           </li>
         ))}
       </ul>
