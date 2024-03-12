@@ -31,6 +31,15 @@ const AddTask = () => {
     }
   };
 
+  const editTask = async(taskId) => {
+    try {
+      await axios.put(`/api/tasks?taskId=${taskId}`);
+      fetchTasks();
+    } catch (error) {
+      console.error('Error removing task:', error);
+    }    
+  }
+
   const removeTask = async (taskId) => {
     try {
     
@@ -57,6 +66,7 @@ const AddTask = () => {
         {tasks.map((task) => (
           <li key={task._id} className={styles.taskItem}>
             {task.name}
+            <button onClick={() => editTask(task._id)} className={styles.removeButton}>Edit</button>
             <button onClick={() => removeTask(task._id)} className={styles.removeButton}>Remove</button>
           </li>
         ))}
